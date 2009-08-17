@@ -10,9 +10,19 @@
 call({Mod, Fun, Args})    -> rpc_call(Mod, Fun, lists:map(fun list_to_binary/1, Args)).
 rpc_call(Mod, Fun, Args)  -> rpc:call(rabbit_node(), Mod, Fun, Args, ?RPC_TIMEOUT).
 
-% Get the local rabbit node
-rabbit_node()             -> erlang:list_to_atom(erlang:atom_to_list(localnode(rabbit))).
-ping_rabbit()							-> net_adm:ping(rabbit_node()).
+% Get the rabbit node from the env
+rabbit_node() ->
+  case application:get_env(alice, rabbithost) of
+    undefined         -> localnode(rabbit);
+    {ok, Hostname}    -> rabbit_node(Hostname)
+  end.
+  
+rabbit_node(Hostname)   ->  case Hostname of
+  H when is_atom(H) -> H;
+  Else -> list_to_atom(Else)
+end.
+
+ping_rabbit()						-> net_adm:ping(rabbit_node()).
 
 
 % TAKEN RIGHT FROM rabbitmq-server/rabbit_misc
