@@ -23,7 +23,7 @@ case "$1" in
     retval=255
   else
     pid=`ps aux|grep "beam.*alice"|grep -v grep|awk '{print $2}'`
-    kill -9 "${pid}"
+    sudo -u rabbitmq kill -9 "${pid}"
   fi
   ;;
 'restart')
