@@ -9,7 +9,7 @@ case "$1" in
   if [ ! -f ebin/rest_app.boot ]; then
           make all_boot
   fi
-  erl -pa ebin -pa deps/*/ebin -name alice -s reloader -boot alice -noshell $@
+  sudo -u rabbitmq erl -pa ebin -pa deps/*/ebin -name alice -s reloader -boot alice -setcookie `cat ~/.erlang.cookie` -noshell $@
   ;;
 'stop')
   # Stop alice
