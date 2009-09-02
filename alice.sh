@@ -4,11 +4,12 @@ retval=0
 case "$1" in
 'start')
   # Start alice
-  cd `dirname $0`
+  ALICE_BASE='/alice'
+  cd ${ALICE_BASE}
   if [ ! -f ebin/rest_app.boot ]; then
           make all_boot
   fi
-  erl -pa $PWD/ebin -pa $PWD/deps/*/ebin -name alice -s reloader -boot alice -noshell $@
+  erl -pa ebin -pa deps/*/ebin -name alice -s reloader -boot alice -noshell $@
   ;;
 'stop')
   # Stop alice
